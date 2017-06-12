@@ -1,0 +1,82 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/osboxes/.nvm/v0.10.32/bin/node',
+1 verbose cli   '/home/osboxes/.nvm/v0.10.32/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'RSVP' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 warn package.json testAlexaApp@1.3.1 No repository field.
+5 warn package.json testAlexaApp@1.3.1 No README data
+6 warn package.json alexa-app-server@2.3.1 No repository field.
+7 warn package.json bcrypt-pbkdf@1.0.1 No repository field.
+8 warn package.json http@0.0.0 http is also the name of a node core module.
+9 warn package.json http@0.0.0 No description
+10 warn package.json http@0.0.0 No repository field.
+11 warn package.json punycode@1.4.1 punycode is also the name of a node core module.
+12 warn package.json string_decoder@0.10.31 string_decoder is also the name of a node core module.
+13 verbose readDependencies using package.json deps
+14 verbose cache add [ 'RSVP', null ]
+15 verbose cache add name=undefined spec="RSVP" args=["RSVP",null]
+16 verbose parsed url { protocol: null,
+16 verbose parsed url   slashes: null,
+16 verbose parsed url   auth: null,
+16 verbose parsed url   host: null,
+16 verbose parsed url   port: null,
+16 verbose parsed url   hostname: null,
+16 verbose parsed url   hash: null,
+16 verbose parsed url   search: null,
+16 verbose parsed url   query: null,
+16 verbose parsed url   pathname: 'RSVP',
+16 verbose parsed url   path: 'RSVP',
+16 verbose parsed url   href: 'RSVP' }
+17 silly lockFile 9e2ff6c5-RSVP RSVP
+18 verbose lock RSVP /home/osboxes/.npm/9e2ff6c5-RSVP.lock
+19 silly lockFile 9e2ff6c5-RSVP RSVP
+20 silly lockFile 9e2ff6c5-RSVP RSVP
+21 verbose addNamed [ 'RSVP', '' ]
+22 verbose addNamed [ null, '*' ]
+23 silly lockFile 1e05505e-RSVP RSVP@
+24 verbose lock RSVP@ /home/osboxes/.npm/1e05505e-RSVP.lock
+25 silly addNameRange { name: 'RSVP', range: '*', hasData: false }
+26 verbose request where is /RSVP
+27 verbose request registry https://registry.npmjs.org/
+28 verbose request id 868bf34678638f0e
+29 verbose url raw /RSVP
+30 verbose url resolving [ 'https://registry.npmjs.org/', './RSVP' ]
+31 verbose url resolved https://registry.npmjs.org/RSVP
+32 verbose request where is https://registry.npmjs.org/RSVP
+33 info trying registry request attempt 1 at 11:37:07
+34 http GET https://registry.npmjs.org/RSVP
+35 http 404 https://registry.npmjs.org/RSVP
+36 silly registry.get cb [ 404,
+36 silly registry.get   { 'content-type': 'application/json',
+36 silly registry.get     'cache-control': 'max-age=0',
+36 silly registry.get     'content-length': '2',
+36 silly registry.get     'accept-ranges': 'bytes',
+36 silly registry.get     date: 'Thu, 08 Jun 2017 10:37:07 GMT',
+36 silly registry.get     via: '1.1 varnish',
+36 silly registry.get     age: '0',
+36 silly registry.get     connection: 'keep-alive',
+36 silly registry.get     'x-served-by': 'cache-fra1221-FRA',
+36 silly registry.get     'x-cache': 'MISS',
+36 silly registry.get     'x-cache-hits': '0',
+36 silly registry.get     'x-timer': 'S1496918227.610760,VS0,VE403',
+36 silly registry.get     vary: 'Accept-Encoding' } ]
+37 silly lockFile 1e05505e-RSVP RSVP@
+38 silly lockFile 1e05505e-RSVP RSVP@
+39 error 404 Not Found
+39 error 404
+39 error 404 'RSVP' is not in the npm registry.
+39 error 404 You should bug the author to publish it
+39 error 404 It was specified as a dependency of 'testAlexaApp'
+39 error 404
+39 error 404 Note that you can also install from a
+39 error 404 tarball, folder, or http url, or git url.
+40 error System Linux 4.4.0-67-generic
+41 error command "/home/osboxes/.nvm/v0.10.32/bin/node" "/home/osboxes/.nvm/v0.10.32/bin/npm" "install" "--save" "RSVP"
+42 error cwd /home/osboxes/alexaProjects/alexa-Allplay-v1.0.2-Release/Alexa
+43 error node -v v0.10.32
+44 error npm -v 1.4.28
+45 error code E404
+46 verbose exit [ 1, true ]
