@@ -679,7 +679,7 @@ app.intent('help', {
     },
 
     function(request, response) {
-        response.say(' you can start by asking . Alexa ask allplay to list devices! to search device connected . and then select the device by saying . Alexa link to device you want to select. once selected you can voice control your device')
+        response.say(' For help please visit our alexa skill app in the alexa app store ')
         response.send()
 
     }
