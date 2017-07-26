@@ -6,7 +6,7 @@ var app = new alexa.app('Alexa_training_AV');
 var req = require('request-promise')
     /*var http = require('http')*/
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
-var serverUrl = "https://voiceconnect.ovh/ask"
+var serverUrl = 'https://voiceconnect.ovh/ask'
     /*var http = require('http')*/
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
 var getlistspeakerperuser = function(req, res, callback) {
@@ -56,8 +56,7 @@ app.intent('search', {
 
 
             console.log('listspeakerConnected', listspeakerConnected)
-            var session = request.getSession()
-            session.set('listspeakerConnected', listspeakerConnected)
+
             var i = 0
 
             var speakerListString = ''
