@@ -6,7 +6,7 @@ var app = new alexa.app('Alexa_training_AV');
 var req = require('request-promise')
     /*var http = require('http')*/
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
-var serverUrl= "https://voiceconnect.ovh"
+var serverUrl= "https://voiceconnect.ovh/ask"
 var getlistspeakerperuser = function(req, res, callback) {
     return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
         callback(listspeakerConnected)
