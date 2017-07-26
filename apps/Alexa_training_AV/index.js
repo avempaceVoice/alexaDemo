@@ -7,6 +7,8 @@ var req = require('request-promise')
     /*var http = require('http')*/
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
 var serverUrl = "https://voiceconnect.ovh/ask"
+    /*var http = require('http')*/
+var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
 var getlistspeakerperuser = function(req, res, callback) {
     return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
         callback(listspeakerConnected)
@@ -16,17 +18,17 @@ var getlistspeakerperuser = function(req, res, callback) {
 
 app.launch(function(request, response) {
     console.log(request)
-    response.say('Welcome to allplay. With this skill ,you can voice control any  allplay device with your AMAZON echo or echo dot . Account linking is required . For instructions, please refer to your alexa app')
+    response.say('Welcome to allplay. With this skill ,you can voice control any  allplay device with your AMAZON echo,  echo dot or echo show . Account linking is required . For instructions, please refer to your alexa app')
 });
 
 app.pre = function(request, response, type) {
     if (!request.sessionDetails.accessToken) {
         // fail ungracefully 
         console.log('no access token')
-        response.say('account linking is required to start using our skill ')
+        response.say('Hi, AllPlay skill  requires account linking with Amazon Alexa. To set up voice control for your AllPlay product, few steps are required. Use AllPlay mobile app to create your user account, then link it to your Amazon by accessing account linking section within Alexa app or web portal. Your AllPlay app is then ready to set which of your devices you want to control with voice. For detailed instructions, visit our online help area.  ')
 
         response.send()
-        throw "Invalid applicationId";
+            //throw "Invalid applicationId";
 
         // `return response.fail("Invalid applicationId")` will also work 
     }
@@ -92,7 +94,7 @@ app.intent('search', {
                 session.set('speaker', listspeakerConnected[0].name)
                 session.set('speaker_numSerie', listspeakerConnected[0].num_serie)
 
-                if (listspeakerConnected[0].linked == true) {
+                if (listspeakerConnected[0].selected == true) {
                     response.say(' You have  ' + listspeakerConnected.length + ' allplay device available, ' + listspeakerConnected[0].name + ' and it is already connected')
                     response.send()
                 } else {
@@ -178,7 +180,7 @@ app.intent('listspeaker', {
                 session.set('speaker', listspeakerConnected[0].name)
                 session.set('speaker_numSerie', listspeakerConnected[0].num_serie)
 
-                if (listspeakerConnected[0].linked == true) {
+                if (listspeakerConnected[0].selected == true) {
                     response.say(' You have  ' + listspeakerConnected.length + ' allplay device available, ' + listspeakerConnected[0].name + ' and it is already connected')
                     response.send()
                 } else {
@@ -221,7 +223,7 @@ app.intent('which', {
             console.log(listspeakerConnected)
             i = 0
             listspeakerConnected.forEach(function(speaker) {
-                if (speaker.linked == true) {
+                if (speaker.selected == true) {
 
                     i++
                     response.say('the Device ' + speaker.name + ' is selected')
@@ -298,7 +300,7 @@ app.intent('yes', {
         if (lastCommande == 'search') {
 
 
-            return http.postAsync({ url: 'http://vps341573.ovh.net:5050', form: { key: numSerie } },
+            return http.postAsync({ url: 'http://vps341573.ovh.net:5151', form: { key: numSerie } },
                 function(error, res, body) {
                     if (!error && res.statusCode == 200) {
 
@@ -371,7 +373,7 @@ app.intent('yes', {
                     session.set('speaker', listspeakerConnected[0].name)
                     session.set('speaker_numSerie', listspeakerConnected[0].num_serie)
 
-                    if (listspeakerConnected[0].linked == true) {
+                    if (listspeakerConnected[0].selected == true) {
                         response.say(' You have  ' + listspeakerConnected.length + ' allplay device available, ' + listspeakerConnected[0].name + ' and it is already connected')
                         response.send()
                     } else {
@@ -424,8 +426,13 @@ app.intent('next', {
                 response.say("ok , play next!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
+
+
             }
 
         })
@@ -457,7 +464,9 @@ app.intent('prev', {
                 response.say("ok , play previous!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -486,7 +495,9 @@ app.intent('play', {
                 response.say("ok , play!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -514,7 +525,9 @@ app.intent('incr', {
                 response.say("ok , increase!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -541,7 +554,9 @@ app.intent('decr', {
                 response.say("ok , decrease!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -575,7 +590,9 @@ app.intent('increase', {
                 response.say("ok , increase by  " + valueToIncrease);
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -610,7 +627,10 @@ app.intent('decrease', {
                 response.say("ok , decrease by  " + valueToDecrease);
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -636,9 +656,33 @@ app.intent('pause', {
                 response.say("ok , pause!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
+
+        })
+
+    }
+);
+
+app.intent('userconnected', {
+        "utterances": [
+            "which user account is actif?",
+        ]
+
+    },
+    function(request, response) {
+        accessToken = request.sessionDetails.accessToken;
+        reqheader = 'Bearer ' + accessToken;
+
+        return http.getAsync({ url: serverUrl + '/getusernamelinked', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+            console.log(listspeakerConnected)
+            username = listspeakerConnected
+            response.say("Your active account is " + username);
+            response.send();
+
 
         })
 
@@ -663,7 +707,9 @@ app.intent('stop', {
                 response.say("ok ,stop!!! ");
                 response.send();
             } else {
-                response.say("I have no allplay device selected. would you like to launch discovery ? ").shouldEndSession(false);;
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
                 response.send();
             }
 
@@ -680,7 +726,7 @@ app.intent('help', {
     },
 
     function(request, response) {
-        response.say(' For help please visit our alexa skill app in the alexa app store ')
+        response.say(' with Allplay skill, use Alexa to control music on compatible wireless speakers using AllPlay technology. Load some music into your product and start playing songs by saying Alexa, ask AllPlay to Play, then navigate inside your playlist by saying Alexa, Ask AllPlay to play next or Alexa, Ask AllPlay to play previous. You can also adjust product volume by saying  ,Alexa, Ask AllPlay to increase or decrease the volume. ')
         response.send()
 
     }
@@ -758,6 +804,27 @@ app.intent('noone', {
     }
 );
 
+
+
+app.intent('whatisplaying', {
+        "utterances": [
+            "what is playing",
+        ]
+
+    },
+    function(request, response) {
+        accessToken = request.sessionDetails.accessToken;
+        reqheader = 'Bearer ' + accessToken;
+
+        return http.getAsync({ url: serverUrl + '/whatisplaying', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+            console.log(listspeakerConnected)
+            response.say(listspeakerConnected.result + " is playing");
+            response.send();
+
+        })
+
+    }
+);
 
 
 
