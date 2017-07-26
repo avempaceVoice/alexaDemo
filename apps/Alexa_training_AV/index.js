@@ -676,6 +676,7 @@ app.intent('userconnected', {
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
+        console.log('call ' + serverUrl + '/ getusernamelinked ')
 
         return http.getAsync({ url: serverUrl + '/getusernamelinked', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
