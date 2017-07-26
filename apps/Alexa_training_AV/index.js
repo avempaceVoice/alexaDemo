@@ -6,9 +6,9 @@ var app = new alexa.app('Alexa_training_AV');
 var req = require('request-promise')
     /*var http = require('http')*/
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
-var serverUrl= "https://voiceconnect.ovh/ask"
+var serverUrl = "https://voiceconnect.ovh/ask"
 var getlistspeakerperuser = function(req, res, callback) {
-    return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+    return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
         callback(listspeakerConnected)
     })
 
@@ -48,7 +48,7 @@ app.intent('search', {
         console.log('accessToken  ', accessToken)
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
 
 
 
@@ -134,7 +134,7 @@ app.intent('listspeaker', {
         console.log('accessToken  ', accessToken)
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
 
 
 
@@ -217,7 +217,7 @@ app.intent('which', {
         console.log('accessToken  ', accessToken)
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             i = 0
             listspeakerConnected.forEach(function(speaker) {
@@ -256,7 +256,7 @@ app.intent('anyone', {
         console.log('accessToken  ', accessToken)
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/linktoanyone', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/linktoanyone', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
 
 
@@ -327,7 +327,7 @@ app.intent('yes', {
             accessToken = request.sessionDetails.accessToken;
             console.log('accessToken  ', accessToken)
             reqheader = 'Bearer ' + accessToken;
-            return http.getAsync({ url: serverUrl+'/api/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+            return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
 
 
 
@@ -417,7 +417,7 @@ app.intent('next', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/playnext', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/playnext', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -450,7 +450,7 @@ app.intent('prev', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/playprevious', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/playprevious', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -479,7 +479,7 @@ app.intent('play', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/playtrack', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/playtrack', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -507,7 +507,7 @@ app.intent('incr', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/incrvolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/incrvolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -534,7 +534,7 @@ app.intent('decr', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/decrevolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/decrevolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -568,7 +568,7 @@ app.intent('increase', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -603,7 +603,7 @@ app.intent('decrease', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -629,7 +629,7 @@ app.intent('pause', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -656,7 +656,7 @@ app.intent('stop', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl+'/api/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -783,7 +783,7 @@ app.intent("link", {
         i = 0
         str = ''
         speakerName = ''
-        return http.getAsync({ url: serverUrl+'/api/linkspeaker', headers: { 'Authorization': reqheader }, json: true, form: { key: namespeakerfromalexa } }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/linkspeaker', headers: { 'Authorization': reqheader }, json: true, form: { key: namespeakerfromalexa } }).spread(function(statusCodesError, listspeakerConnected) {
 
 
 
