@@ -679,8 +679,7 @@ app.intent('userconnected', {
         console.log('call ' + serverUrl + '/ getusernamelinked ')
 
         return http.getAsync({ url: serverUrl + '/getusernamelinked', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log("listspeakerConnected", listspeakerConnected)
-            console.log("statusCodesError", statusCodesError)
+
             username = listspeakerConnected
             response.say("Your active account is " + username);
             response.send();
