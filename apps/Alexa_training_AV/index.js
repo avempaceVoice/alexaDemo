@@ -581,7 +581,7 @@ app.intent('increase', {
 
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
-        if (valueToIncrease) {
+        if (valueToIncrease != '?') {
 
 
             return http.getAsync({ url: serverUrl + '/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
@@ -623,7 +623,7 @@ app.intent('decrease', {
 
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
-        if (valueToDecrease) {
+        if (valueToDecrease != '?') {
             return http.getAsync({ url: serverUrl + '/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
                 console.log(listspeakerConnected)
                 if (listspeakerConnected.result == 'found') {
