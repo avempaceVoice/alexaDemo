@@ -18,7 +18,7 @@ var getlistspeakerperuser = function(req, res, callback) {
 
 app.launch(function(request, response) {
     console.log(request)
-    response.say('Welcome to allplay. With this skill ,you can voice control any  allplay device with your AMAZON echo,  echo dot or echo show . Account linking is required . For instructions, please refer to your alexa app')
+    response.say('Welcome to allplay. With this skill ,you can voice control any eligible allplay device with your AMAZON echo,  echo dot or echo show . Account linking is required . For instructions, please refer to your alexa app')
 });
 
 app.pre = function(request, response, type) {
@@ -581,23 +581,28 @@ app.intent('increase', {
 
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
-
-        return http.getAsync({ url: serverUrl + '/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
-            if (listspeakerConnected.result == 'found') {
-
-                response.say("ok , increase by  " + valueToIncrease);
-                response.send();
-            } else {
-                var session = request.getSession()
-                session.set('lastCommande', "control")
-                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
-                response.send();
-            }
-
-        })
+        if (valueToIncrease) {
 
 
+            return http.getAsync({ url: serverUrl + '/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+                console.log(listspeakerConnected)
+                if (listspeakerConnected.result == 'found') {
+
+                    response.say("ok , increase by  " + valueToIncrease);
+                    response.send();
+                } else {
+                    var session = request.getSession()
+                    session.set('lastCommande', "control")
+                    response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
+                    response.send();
+                }
+
+            })
+
+        } else {
+            response.say(" Sorry, could you repeat again !").shouldEndSession(true);;
+            response.send();
+        }
 
 
     }
@@ -618,23 +623,26 @@ app.intent('decrease', {
 
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
+        if (valueToDecrease) {
+            return http.getAsync({ url: serverUrl + '/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+                console.log(listspeakerConnected)
+                if (listspeakerConnected.result == 'found') {
 
-        return http.getAsync({ url: serverUrl + '/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
-            if (listspeakerConnected.result == 'found') {
+                    response.say("ok , decrease by  " + valueToDecrease);
+                    response.send();
+                } else {
+                    var session = request.getSession()
+                    session.set('lastCommande', "control")
 
-                response.say("ok , decrease by  " + valueToDecrease);
-                response.send();
-            } else {
-                var session = request.getSession()
-                session.set('lastCommande', "control")
+                    response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
+                    response.send();
+                }
 
-                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
-                response.send();
-            }
-
-        })
-
+            })
+        } else {
+            response.say(" Sorry, could you repeat again !").shouldEndSession(true);;
+            response.send();
+        }
     }
 );
 
@@ -700,7 +708,7 @@ app.intent('stop', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl + '/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/stop', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
 
@@ -816,10 +824,18 @@ app.intent('whatisplaying', {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
 
-        return http.getAsync({ url: serverUrl + '/whatisplaying', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
+        return http.getAsync({ url: serverUrl + '/playtrack', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
             console.log(listspeakerConnected)
-            response.say(listspeakerConnected.result + " is playing");
-            response.send();
+            if (listspeakerConnected.result == 'found') {
+
+                response.say("ok , play!!! ");
+                response.send();
+            } else {
+                var session = request.getSession()
+                session.set('lastCommande', "control")
+                response.say(" Your device  Is  offline. please check if it is powered on and connected to internet").shouldEndSession(true);;
+                response.send();
+            }
 
         })
 
