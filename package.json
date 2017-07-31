@@ -1,12 +1,17 @@
 {
-  "name": "testAlexaApp",
-  "version": "1.3.1",
-  "description": "A simple node app alexa",
-  "author": "Wejd daghfous",
-  "dependencies": {
-    "alexa-app-server": "^2.2.4",
-    "bluebird": "^3.5.0",
-    "http": "0.0.0",
-    "rsvp": "^3.5.0"
-  }
+    "name": "testAlexaApp",
+    "version": "1.3.1",
+    "description": "A simple node app alexa",
+    "author": "Wejd daghfous",
+    "dependencies": {
+        "alexa-app-server": "^2.2.4",
+        "bluebird": "^3.5.0",
+        "http": "0.0.0",
+        "rsvp": "^3.5.0"
+    },
+
+    "author": {
+        "email": "wejd.daghfous@esprit.tn",
+        "name": "wejd daghfous"
+    }
 }

@@ -1,14 +1,25 @@
 module.change_code = 1;
 'use strict';
-
+/**
+ * 
+ * Copyright (c) 2017, Avempace Wireless (Daghfous Wejd). All rights reserved.
+ * 
+ */
 var alexa = require('alexa-app');
 var app = new alexa.app('Alexa_training_AV');
 var req = require('request-promise')
-    /*var http = require('http')*/
+
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
 var serverUrl = 'https://voiceconnect.ovh/ask'
-    /*var http = require('http')*/
+
 var http = require('bluebird').promisifyAll(require('request'), { multiArgs: true });
+
+/**
+ * testing purpose
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} callback 
+ */
 var getlistspeakerperuser = function(req, res, callback) {
     return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
         callback(listspeakerConnected)
@@ -16,29 +27,41 @@ var getlistspeakerperuser = function(req, res, callback) {
 
 }
 
+/**
+ * this function is called when you ask alexa to start
+ */
 app.launch(function(request, response) {
-    console.log(request)
+
     response.say('Welcome to allplay. With this skill ,you can voice control any eligible allplay device with your AMAZON echo,  echo dot or echo show . Account linking is required . For instructions, please refer to your alexa app')
 });
 
+
+/**
+ * function that execute every time before any other function 
+ * this function verify if the user has a valid access token
+ */
 app.pre = function(request, response, type) {
     if (!request.sessionDetails.accessToken) {
-        // fail ungracefully 
-        console.log('no access token')
+
+
         response.say('Hi, AllPlay skill  requires account linking with Amazon Alexa. To set up voice control for your AllPlay product, few steps are required. Use AllPlay mobile app to create your user account, then link it to your Amazon by accessing account linking section within Alexa app or web portal. Your AllPlay app is then ready to set which of your devices you want to control with voice. For detailed instructions, visit our online help area.  ')
 
         response.send()
-            //throw "Invalid applicationId";
 
-        // `return response.fail("Invalid applicationId")` will also work 
     }
 };
 
+/**
+ * function called when an error occure
+ */
 app.error = function(exception, request, response) {
-    console.log(exception)
+
     response.say('Sorry an error occured ');
 };
 
+/**
+ * funciton called when the user want to search for the connected speakers
+ */
 app.intent('search', {
         "utterances": [
             "search speakers",
@@ -47,7 +70,7 @@ app.intent('search', {
     },
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
-        console.log('accessToken  ', accessToken)
+
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
@@ -55,7 +78,7 @@ app.intent('search', {
 
 
 
-            console.log('listspeakerConnected', listspeakerConnected)
+
 
             var i = 0
 
@@ -77,8 +100,8 @@ app.intent('search', {
                 }
             }
 
-            console.log('list device ', speakerListString)
-            console.log('list length is ', speakerListString.length)
+
+
             if (speakerListString == 0) {
                 response.say('I have no allplay device detected. Please try again later !')
                 response.send()
@@ -117,13 +140,13 @@ app.intent('search', {
         });
 
 
-    })
+    }
+)
 
 
-
-
-
-
+/**
+ * function called when the user want to search for he connected speakers
+ */
 app.intent('listspeaker', {
         "utterances": [
             "list devices",
@@ -132,7 +155,7 @@ app.intent('listspeaker', {
     },
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
-        console.log('accessToken  ', accessToken)
+
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
@@ -140,7 +163,7 @@ app.intent('listspeaker', {
 
 
 
-            console.log('listspeakerConnected', listspeakerConnected)
+
             var session = request.getSession()
             session.set('listspeakerConnected', listspeakerConnected)
             var i = 0
@@ -163,8 +186,8 @@ app.intent('listspeaker', {
                 }
             }
 
-            console.log('list device ', speakerListString)
-            console.log('list length is ', speakerListString.length)
+
+
             if (speakerListString == 0) {
                 response.say('I have no allplay device detected. Please try again later !')
                 response.send()
@@ -206,6 +229,9 @@ app.intent('listspeaker', {
 
 );
 
+/**
+ * function called when the user want to know the current selected speaker
+ */
 app.intent('which', {
         "utterances": [
             "which device is connected",
@@ -215,11 +241,11 @@ app.intent('which', {
 
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
-        console.log('accessToken  ', accessToken)
+
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             i = 0
             listspeakerConnected.forEach(function(speaker) {
                 if (speaker.selected == true) {
@@ -239,29 +265,26 @@ app.intent('which', {
 
 
 
-    })
+    }
+)
 
 
-
-
-
+/***
+ * function called when the user ask alexa to select any speaker connected
+ */
 app.intent('anyone', {
         "utterances": [
             "any one",
         ]
 
     },
-
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
-        console.log('accessToken  ', accessToken)
+
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/linktoanyone', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
 
-
-            console.log(listspeakerConnected)
             if (listspeakerConnected.result == 'found') {
                 var session = request.getSession()
                 session.set('speaker_numSerie', listspeakerConnected)
@@ -273,16 +296,16 @@ app.intent('anyone', {
                 response.send()
             }
 
-
-
-
         })
 
+    }
+);
 
 
-
-    });
-
+/**
+ * function called when the user say yes 
+ * it can search for devices or link to device
+ */
 app.intent('yes', {
         "utterances": [
             "play next",
@@ -310,7 +333,7 @@ app.intent('yes', {
                             response.send()
 
                         } else {
-                            console.log('not found', numSerie)
+
                             response.say('I was unable to select ' + val + ' . Please try again later')
                             response.send()
 
@@ -326,14 +349,14 @@ app.intent('yes', {
 
         if (lastCommande == 'control') {
             accessToken = request.sessionDetails.accessToken;
-            console.log('accessToken  ', accessToken)
+
             reqheader = 'Bearer ' + accessToken;
             return http.getAsync({ url: serverUrl + '/speakers', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
 
 
 
 
-                console.log('listspeakerConnected', listspeakerConnected)
+
                 var session = request.getSession()
                 session.set('listspeakerConnected', listspeakerConnected)
                 var i = 0
@@ -356,8 +379,8 @@ app.intent('yes', {
                     }
                 }
 
-                console.log('list device ', speakerListString)
-                console.log('list length is ', speakerListString.length)
+
+
                 if (speakerListString == 0) {
                     response.say('I have no allplay device detected. Please try again later !')
                     response.send()
@@ -407,6 +430,9 @@ app.intent('yes', {
     }
 );
 
+/**
+ * function called when the user want to play the next song
+ */
 app.intent('next', {
         "utterances": [
             "play next",
@@ -419,7 +445,7 @@ app.intent('next', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/playnext', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , play next!!! ");
@@ -444,6 +470,9 @@ app.intent('next', {
     }
 );
 
+/**
+ * function called when the user want to play the previous song
+ */
 app.intent('prev', {
         "utterances": [
             "play previous",
@@ -457,7 +486,7 @@ app.intent('prev', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/playprevious', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , play previous!!! ");
@@ -476,6 +505,9 @@ app.intent('prev', {
     }
 );
 
+/**
+ * function called when the user want to play a song
+ */
 app.intent('play', {
         "utterances": [
             "play",
@@ -488,7 +520,7 @@ app.intent('play', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/playtrack', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , play!!! ");
@@ -506,6 +538,9 @@ app.intent('play', {
     }
 );
 
+/**
+ * function called when the user want to increase the volume by the default step
+ */
 app.intent('incr', {
         "utterances": [
             "increase volume ",
@@ -518,7 +553,7 @@ app.intent('incr', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/incrvolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , increase!!! ");
@@ -536,6 +571,9 @@ app.intent('incr', {
     }
 );
 
+/**
+ * function called when the user want to decrease the volume by the default step
+ */
 app.intent('decr', {
         "utterances": [
             "decrease volume ",
@@ -547,7 +585,7 @@ app.intent('decr', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/decrevolume', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , decrease!!! ");
@@ -565,6 +603,9 @@ app.intent('decr', {
     }
 );
 
+/**
+ * function called when the user want to increase the volume by the sayed number as parameter
+ */
 app.intent('increase', {
         "slots": {
             "number": "AMAZON.NUMBER",
@@ -585,7 +626,7 @@ app.intent('increase', {
 
 
             return http.getAsync({ url: serverUrl + '/increasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToIncrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-                console.log(listspeakerConnected)
+
                 if (listspeakerConnected.result == 'found') {
 
                     response.say("ok , increase by  " + valueToIncrease);
@@ -608,6 +649,10 @@ app.intent('increase', {
     }
 );
 
+
+/**
+ * function called when the user want to decrease the volume by the sayed number as parameter
+ */
 app.intent('decrease', {
         "slots": {
             "number": "AMAZON.NUMBER",
@@ -625,7 +670,7 @@ app.intent('decrease', {
         reqheader = 'Bearer ' + accessToken;
         if (valueToDecrease != '?') {
             return http.getAsync({ url: serverUrl + '/decreasevolume', headers: { 'Authorization': reqheader }, form: { key: valueToDecrease }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-                console.log(listspeakerConnected)
+
                 if (listspeakerConnected.result == 'found') {
 
                     response.say("ok , decrease by  " + valueToDecrease);
@@ -646,6 +691,9 @@ app.intent('decrease', {
     }
 );
 
+/**
+ * function called when the user want to pause the song
+ */
 app.intent('pause', {
         "utterances": [
             "pause",
@@ -657,7 +705,7 @@ app.intent('pause', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/pause', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , pause!!! ");
@@ -674,6 +722,10 @@ app.intent('pause', {
     }
 );
 
+
+/**
+ * function called when the user want to know then name of the connected user
+ */
 app.intent('userconnected', {
         "utterances": [
             "which user account is actif?",
@@ -683,7 +735,7 @@ app.intent('userconnected', {
     function(request, response) {
         accessToken = request.sessionDetails.accessToken;
         reqheader = 'Bearer ' + accessToken;
-        console.log('call ' + serverUrl + '/ getusernamelinked ')
+
 
         return http.getAsync({ url: serverUrl + '/getusernamelinked', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
 
@@ -697,7 +749,9 @@ app.intent('userconnected', {
     }
 );
 
-
+/**
+ * function called when the user want to stop the song
+ */
 app.intent('stop', {
         "utterances": [
             "stop",
@@ -709,7 +763,7 @@ app.intent('stop', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/stop', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok ,stop!!! ");
@@ -726,6 +780,9 @@ app.intent('stop', {
     }
 );
 
+/**
+ * function called when the user want help
+ */
 app.intent('help', {
         "utterances": [
             "help",
@@ -740,6 +797,10 @@ app.intent('help', {
     }
 );
 
+
+/**
+ * function called when the user want to start the skill
+ */
 app.intent('start', {
         "utterances": [
             "start",
@@ -756,6 +817,10 @@ app.intent('start', {
     }
 );
 
+
+/**
+ * function called when the user want to ignore what alexa asked for
+ */
 app.intent('nothing', {
         "utterances": [
             "nothing",
@@ -770,6 +835,9 @@ app.intent('nothing', {
     }
 );
 
+/**
+ * function called when the user want to ignore what alexa asked for
+ */
 app.intent('none', {
         "utterances": [
             "none",
@@ -784,6 +852,9 @@ app.intent('none', {
     }
 );
 
+/**
+ * function called when the user want to ignore what alexa asked for
+ */
 app.intent('no', {
         "utterances": [
             "no",
@@ -798,6 +869,9 @@ app.intent('no', {
     }
 );
 
+/**
+ * function called when the user want to ignore what alexa asked for
+ */
 app.intent('noone', {
         "utterances": [
             "no one",
@@ -813,7 +887,9 @@ app.intent('noone', {
 );
 
 
-
+/**
+ * test purpose function
+ */
 app.intent('whatisplaying', {
         "utterances": [
             "what is playing",
@@ -825,7 +901,7 @@ app.intent('whatisplaying', {
         reqheader = 'Bearer ' + accessToken;
 
         return http.getAsync({ url: serverUrl + '/playtrack', headers: { 'Authorization': reqheader }, json: true }).spread(function(statusCodesError, listspeakerConnected) {
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
 
                 response.say("ok , play!!! ");
@@ -843,8 +919,9 @@ app.intent('whatisplaying', {
 );
 
 
-
-
+/**
+ * function called when the user want to link to speaker
+ */
 app.intent("link", {
         "slots": {
             "NAMED": "AMAZON.LITERAL",
@@ -871,7 +948,7 @@ app.intent("link", {
 
 
 
-            console.log(listspeakerConnected)
+
             if (listspeakerConnected.result == 'found') {
                 var session = request.getSession()
                 session.set('speaker_numSerie', listspeakerConnected)
